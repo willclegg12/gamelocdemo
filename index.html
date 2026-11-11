@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Localization Demo: Aniimo — Will Clegg</title>
+<style>
+:root {
+  --bg: #f5f2ee;
+  --bg-card: #ffffff;
+  --text: #1a1a1a;
+  --text-secondary: #5a5550;
+  --accent: #c4362c;
+  --border: #e0dbd5;
+  --tag-bg: #eae6e0;
+  --tag-text: #6b6560;
+  --hero-bg: #1c2028;
+  --hero-text: #f0ece6;
+  --hero-sub: #a8a29e;
+  --cn-text: #7a7570;
+  --quote-bg: #f0ece6;
+  --table-head: #eae6e0;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141618; --bg-card: #1e2024; --text: #e8e4de; --text-secondary: #9a958e;
+    --accent: #e05a50; --border: #2e3038; --tag-bg: #2a2c32; --tag-text: #9a958e;
+    --hero-bg: #0c0e12; --hero-text: #e8e4de; --hero-sub: #78736c;
+    --cn-text: #8a857e; --quote-bg: #1a1c20; --table-head: #252830;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141618; --bg-card: #1e2024; --text: #e8e4de; --text-secondary: #9a958e;
+  --accent: #e05a50; --border: #2e3038; --tag-bg: #2a2c32; --tag-text: #9a958e;
+  --hero-bg: #0c0e12; --hero-text: #e8e4de; --hero-sub: #78736c;
+  --cn-text: #8a857e; --quote-bg: #1a1c20; --table-head: #252830;
+  color-scheme: dark;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+}
+
+/* Hero */
+.hero {
+  background: var(--hero-bg); color: var(--hero-text);
+  padding: 0; text-align: center; position: relative; overflow: hidden;
+}
+.hero-img {
+  width: 100%; max-height: 400px; object-fit: cover; object-position: center 30%;
+  display: block; opacity: 0.6;
+}
+.hero-overlay {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 60px 24px 48px;
+  background: linear-gradient(transparent, var(--hero-bg) 70%);
+}
+.hero h1 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 400;
+  letter-spacing: -0.01em; line-height: 1.15; text-wrap: balance; margin-bottom: 8px;
+}
+.hero .subtitle { font-size: 1.05rem; color: var(--hero-sub); max-width: 600px; margin: 0 auto 6px; }
+.hero .subtitle-cn { font-size: 0.95rem; color: var(--hero-sub); opacity: 0.8; margin-bottom: 20px; }
+.hero .contact {
+  font-size: 0.88rem; color: var(--hero-sub);
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 20px;
+}
+.hero .contact a { color: var(--hero-sub); text-decoration: none; }
+.hero .contact a:hover { color: var(--hero-text); }
+
+/* Intro */
+.intro { max-width: 780px; margin: 0 auto; padding: 56px 24px 20px; }
+.intro p { font-size: 1.02rem; color: var(--text-secondary); }
+.intro p + p { margin-top: 12px; }
+.intro .cn { font-size: 0.92rem; color: var(--cn-text); margin-top: 8px; }
+
+/* Game info bar */
+.game-bar {
+  max-width: 780px; margin: 0 auto; padding: 0 24px 40px;
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.game-bar .tag {
+  background: var(--tag-bg); color: var(--tag-text);
+  padding: 4px 14px; border-radius: 100px; font-size: 0.82rem;
+}
+
+/* Screenshots */
+.screenshots {
+  max-width: 1100px; margin: 0 auto; padding: 0 24px 48px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+}
+.screenshots img {
+  width: 100%; border-radius: 8px; display: block;
+  border: 1px solid var(--border);
+}
+
+/* Section headings */
+.section-heading {
+  max-width: 780px; margin: 0 auto; padding: 48px 24px 16px;
+}
+.section-heading h2 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.6rem; font-weight: 400; color: var(--text);
+}
+.section-heading .section-cn {
+  font-size: 0.95rem; color: var(--cn-text); margin-top: 2px;
+}
+.section-heading .section-rule {
+  width: 48px; height: 2px; background: var(--accent); margin-top: 12px; border-radius: 1px;
+}
+
+/* Content area */
+.content { max-width: 780px; margin: 0 auto; padding: 0 24px; }
+
+/* Sub headings */
+.content h3 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.15rem; font-weight: 400; color: var(--text);
+  margin: 32px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+.content h3 .cn { font-weight: 400; color: var(--cn-text); font-size: 0.9rem; margin-left: 8px; }
+
+/* Tables */
+.term-table {
+  width: 100%; border-collapse: collapse; margin: 16px 0 32px;
+  font-size: 0.9rem; line-height: 1.5;
+}
+.term-table thead th {
+  background: var(--table-head); text-align: left;
+  padding: 10px 14px; font-weight: 600; font-size: 0.82rem;
+  text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-secondary);
+  border-bottom: 2px solid var(--border);
+}
+.term-table tbody td {
+  padding: 12px 14px; border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.term-table tbody tr:last-child td { border-bottom: none; }
+.term-table .cn-source { font-weight: 500; color: var(--text); white-space: nowrap; }
+.term-table .en-term { font-weight: 600; color: var(--accent); }
+.term-table .rationale { color: var(--text-secondary); font-size: 0.88rem; }
+.term-table .usage { color: var(--text-secondary); font-size: 0.85rem; font-style: italic; }
+
+/* Dialogue blocks */
+.dialogue-block {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 24px; margin: 20px 0;
+}
+.dialogue-block .char-name {
+  font-weight: 600; font-size: 0.88rem; color: var(--accent);
+  text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 12px;
+}
+.dialogue-block .line-pair { margin-bottom: 16px; }
+.dialogue-block .line-cn {
+  font-size: 0.92rem; color: var(--cn-text);
+  padding: 8px 14px; background: var(--quote-bg); border-radius: 6px;
+  border-left: 3px solid var(--border); margin-bottom: 6px;
+}
+.dialogue-block .line-en {
+  font-size: 0.95rem; color: var(--text);
+  padding: 8px 14px; background: var(--quote-bg); border-radius: 6px;
+  border-left: 3px solid var(--accent); font-style: italic;
+}
+.dialogue-block .rationale {
+  font-size: 0.88rem; color: var(--text-secondary);
+  margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);
+}
+.dialogue-block .rationale strong { color: var(--text); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.03em; }
+
+/* Summary */
+.summary-list {
+  list-style: none; margin: 16px 0 48px; padding: 0;
+}
+.summary-list li {
+  padding: 14px 0; border-bottom: 1px solid var(--border);
+  font-size: 0.95rem;
+}
+.summary-list li:last-child { border-bottom: none; }
+.summary-list strong { color: var(--accent); }
+.summary-list .cn { display: block; font-size: 0.85rem; color: var(--cn-text); margin-top: 4px; }
+
+/* Footer */
+footer {
+  text-align: center; padding: 48px 24px; font-size: 0.85rem; color: var(--text-secondary);
+  border-top: 1px solid var(--border); margin-top: 48px;
+}
+footer a { color: var(--accent); text-decoration: none; }
+
+/* Theme toggle */
+.theme-toggle {
+  position: fixed; top: 16px; right: 16px; z-index: 100;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 50%;
+  width: 36px; height: 36px; cursor: pointer; font-size: 16px;
+  display: grid; place-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.theme-toggle:hover { transform: scale(1.1); }
+
+/* Responsive */
+@media (max-width: 700px) {
+  .screenshots { grid-template-columns: 1fr; }
+  .term-table { font-size: 0.82rem; }
+  .term-table thead th, .term-table tbody td { padding: 8px 10px; }
+}
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="
+  const t = document.documentElement;
+  const next = t.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  t.setAttribute('data-theme', next);
+" aria-label="Toggle theme">◑</button>
+
+<!-- Hero -->
+<header class="hero">
+  <img src="img/aniimo-banner.png" alt="Aniimo key art" class="hero-img">
+  <div class="hero-overlay">
+    <h1>Game Localization Demo</h1>
+    <div class="subtitle">CN→EN Naming & Localization Showcase</div>
+    <div class="subtitle-cn">游戏本地化测试 — 中译英命名与翻译示例</div>
+    <div class="contact">
+      <span>William Clegg</span>
+      <a href="https://linkedin.com/in/william-clegg/">LinkedIn</a>
+    </div>
+  </div>
+</header>
+
+<!-- Intro -->
+<div class="intro">
+  <p>A localization showcase built around <strong><em>Aniimo</em></strong> (伊莫), a creature-collection action RPG by FunPlus. This demo covers terminology, dialogue, promotional copy, story, fictional events, organizations and place names — demonstrating how a Chinese-language game world can be transposed into natural, compelling English while preserving brand identity and cultural resonance.</p>
+  <p class="cn">以趣加旗下的生物收集动作RPG《伊莫》为基础的本地化展示案例。涵盖术语、台词、PV文案、剧情、虚构节日、组织及地名等命名示例，展示如何将中文游戏世界转化为自然、有吸引力的英文，同时保留品牌识别度和文化内涵。</p>
+</div>
+
+<div class="game-bar">
+  <span class="tag">Creature Collection / Action RPG</span>
+  <span class="tag">Mobile / PC</span>
+  <span class="tag">FunPlus</span>
+  <span class="tag">CN → EN</span>
+</div>
+
+<!-- Screenshots -->
+<div class="screenshots">
+  <img src="img/aniimo-world.png" alt="Aniimo open world exploration">
+  <img src="img/aniimo-combat.png" alt="Aniimo creature combat">
+</div>
+
+<!-- 1. Terminology -->
+<div class="section-heading">
+  <h2>1. Terminology</h2>
+  <div class="section-cn">术语</div>
+  <div class="section-rule"></div>
+</div>
+
+<div class="content">
+  <h3>Core system terms <span class="cn">核心系统术语</span></h3>
+
+  <table class="term-table">
+    <thead>
+      <tr>
+        <th>CN Source</th>
+        <th>EN Rendering</th>
+        <th>Naming Rationale & Cultural Associations<br><span style="font-weight:400;text-transform:none;letter-spacing:0">命名依据与文化联想</span></th>
+        <th>Usage Rules<br><span style="font-weight:400;text-transform:none;letter-spacing:0">使用规则</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="cn-source">联结</td>
+        <td class="en-term">Twine</td>
+        <td class="rationale">The core mechanic of bonding with creatures. "Twine" was chosen over literal "link/connect" to evoke intertwining fates and emotional bonding — the word carries connotations of threads woven together, fitting the game's theme of partnership between humans and creatures.<br><span style="color:var(--cn-text);font-size:0.85rem">核心羁绊机制。选用"Twine"而非直译"link/connect"，唤起命运交织、情感纽带的联想——该词蕴含丝线编织的意象，契合人与生物之间伙伴关系的游戏主题。</span></td>
+        <td class="usage">Always capitalized as a game mechanic. Used as noun ("activate Twine") and adjective ("Twine state"). Never "link" or "connect" in mechanical contexts.<br><span style="color:var(--cn-text);font-size:0.83rem">作为游戏机制名称时始终大写。可作名词和形容词使用。机制语境中不得使用"link"或"connect"。</span></td>
+      </tr>
+      <tr>
+        <td class="cn-source">联结者</td>
+        <td class="en-term">Pathfinder</td>
+        <td class="rationale">The player character class. Avoids the literal "Linker/Connector" in favor of a term suggesting exploration and discovery — core to the game's open-world identity. Deliberately distances itself from the mechanical "Twine" to give players a heroic identity.<br><span style="color:var(--cn-text);font-size:0.85rem">玩家角色职业名。避免直译"连接者"，选用暗示探索与发现的词汇——契合游戏的开放世界核心定位。刻意与机制名"Twine"拉开距离，赋予玩家英雄般的身份认同。</span></td>
+        <td class="usage">Always capitalized. Plural: "Pathfinders." Used in NPC dialogue, system text and PvP contexts.<br><span style="color:var(--cn-text);font-size:0.83rem">始终大写。复数形式："Pathfinders"。用于NPC对话、系统文本及PvP语境。</span></td>
+      </tr>
+      <tr>
+        <td class="cn-source">伊莫</td>
+        <td class="en-term">Aniimo</td>
+        <td class="rationale">The game's collectible creatures. A coined portmanteau blending "animal" + "imo" (from the Japanese 芋, suggesting something round and cute). The doubled "ii" is a deliberate stylistic choice for visual distinctiveness and mirrors the game's playful tone.<br><span style="color:var(--cn-text);font-size:0.85rem">游戏中的可收集生物。由"animal"+"imo"（源自日语芋，暗示圆润可爱之物）合成的新造词。双写"ii"是刻意的视觉设计，呼应游戏的活泼基调。</span></td>
+        <td class="usage">Invariant — never "Imos" or "Imo." Plural is also "Aniimo" (zero plural, like "sheep" or "Pokémon").<br><span style="color:var(--cn-text);font-size:0.83rem">形态不变——不可写作"Imos"或"Imo"。复数同样为"Aniimo"（零复数，如"sheep"）。</span></td>
+      </tr>
+      <tr>
+        <td class="cn-source">谜立方</td>
+        <td class="en-term">Aniipod</td>
+        <td class="rationale">The capture device. Blends "Aniimo" + "pod," evoking a small, self-contained capsule. The "ii" mirrors the creature name, creating brand cohesion. Avoids "ball" (too close to a competitor franchise) and "cube" (too literal from 立方).<br><span style="color:var(--cn-text);font-size:0.85rem">捕获装置。由"Aniimo"+"pod"合成，唤起小巧自足胶囊的联想。"ii"与生物名称呼应，形成品牌统一感。避免使用"ball"（过于接近竞品）和"cube"（过于直译）。</span></td>
+        <td class="usage">Capitalized. Tiered variants: Aniipod Pro (超级立方), Aniipod Mega (究极立方), Aniipod Hyper (冠军立方).<br><span style="color:var(--cn-text);font-size:0.83rem">大写。分级后缀：Aniipod Pro、Aniipod Mega、Aniipod Hyper。</span></td>
+      </tr>
+      <tr>
+        <td class="cn-source">威力</td>
+        <td class="en-term">Might</td>
+        <td class="rationale">A core combat stat. "Might" was selected over "Power" or "Strength" to avoid collision with other RPG stat names and to give the game its own tonal identity — slightly archaic, matching the fantasy-adventure register.<br><span style="color:var(--cn-text);font-size:0.85rem">核心战斗属性。选用"Might"而非"Power"或"Strength"，避免与其他RPG属性名冲突，赋予游戏自身的语调特色——略带古风，匹配奇幻冒险的文体风格。</span></td>
+        <td class="usage">Capitalized when referring to the stat. Lowercase "might" in general prose.<br><span style="color:var(--cn-text);font-size:0.83rem">作为属性名时大写。普通行文中小写。</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Combat & status terms <span class="cn">战斗与状态术语</span></h3>
+
+  <table class="term-table">
+    <thead>
+      <tr>
+        <th>CN Source</th>
+        <th>EN Rendering</th>
+        <th>Naming Rationale<br><span style="font-weight:400;text-transform:none;letter-spacing:0">命名依据</span></th>
+        <th>Usage Rules<br><span style="font-weight:400;text-transform:none;letter-spacing:0">使用规则</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="cn-source">终结技</td>
+        <td class="en-term">Ultimate</td>
+        <td class="rationale">Standard genre term familiar to action RPG players. Avoids "finishing move" (too fighting-game) and "finisher" (too informal for a prestige ability).<br><span style="color:var(--cn-text);font-size:0.85rem">动作RPG玩家熟知的标准品类术语。避免"finishing move"（太偏格斗游戏）和"finisher"（对高阶技能而言过于随意）。</span></td>
+        <td class="usage">Capitalized as a skill type. "Use your Ultimate" / "cast an Ultimate."<br><span style="color:var(--cn-text);font-size:0.83rem">作为技能类型时大写。</span></td>
+      </tr>
+      <tr>
+        <td class="cn-source">击破状态</td>
+        <td class="en-term">Break State</td>
+        <td class="rationale">Mechanic where sustained damage temporarily collapses a target's defenses. "Break" is short, punchy and immediately communicable — players intuitively understand "break the enemy's guard."<br><span style="color:var(--cn-text);font-size:0.85rem">持续伤害暂时瓦解目标防御的机制。"Break"简洁有力、一目了然——玩家本能地理解"击破敌方防御"。</span></td>
+        <td class="usage">Always capitalized as a mechanic name. "[Break]" when used as a status tag in skill descriptions.<br><span style="color:var(--cn-text);font-size:0.83rem">作为机制名始终大写。技能描述中作状态标签时使用方括号。</span></td>
+      </tr>
+      <tr>
+        <td class="cn-source">元素异常</td>
+        <td class="en-term">Elemental Debuff</td>
+        <td class="rationale">Converts the CN concept of "elemental anomaly" (异常) into the universally understood RPG term "debuff." Element name prefixed directly: "Water Debuff," "Ice Debuff."<br><span style="color:var(--cn-text);font-size:0.85rem">将中文"元素异常"概念转化为RPG玩家通用术语"debuff"。元素名直接前置：Water Debuff、Ice Debuff。</span></td>
+        <td class="usage">"[Water Debuff]" in square brackets as a status tag. No "Elemental" prefix on individual elements.<br><span style="color:var(--cn-text);font-size:0.83rem">作为状态标签时使用方括号。具体元素前不加"Elemental"前缀。</span></td>
+      </tr>
+      <tr>
+        <td class="cn-source">潜能激发</td>
+        <td class="en-term">Capability Awakening</td>
+        <td class="rationale">A creature growth system. "Capability" avoids overlap with "Potential" (used for IV-equivalent stats) while "Awakening" conveys the dramatic, narrative-driven nature of unlocking hidden power.<br><span style="color:var(--cn-text);font-size:0.85rem">生物成长系统。"Capability"避免与"Potential"（用于IV等值属性）重叠，"Awakening"则传达解锁隐藏力量的戏剧感和叙事感。</span></td>
+        <td class="usage">Capitalized as a system name.<br><span style="color:var(--cn-text);font-size:0.83rem">作为系统名称时大写。</span></td>
+      </tr>
+      <tr>
+        <td class="cn-source">闪耀</td>
+        <td class="en-term">Sparkling</td>
+        <td class="rationale">A creature rarity/variant tier. "Sparkling" was chosen for brightness and energy over "shining" or "glittering," and avoids the overused "shiny" (too closely associated with a competitor franchise).<br><span style="color:var(--cn-text);font-size:0.85rem">生物稀有度/变体等级。"Sparkling"比"shining"或"glittering"更具亮度和活力，且避免了被竞品广泛使用的"shiny"。</span></td>
+        <td class="usage">Capitalized as a rarity tier. "Sparkling variant," "Sparkling Radiance" (闪耀光彩).<br><span style="color:var(--cn-text);font-size:0.83rem">作为稀有度等级时大写。</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 2. Dialogue -->
+<div class="section-heading">
+  <h2>2. Dialogue & Lines</h2>
+  <div class="section-cn">台词</div>
+  <div class="section-rule"></div>
+</div>
+
+<div class="content">
+  <h3>Register calibration across character archetypes <span class="cn">不同角色语域校准</span></h3>
+
+  <div class="dialogue-block">
+    <div class="char-name">Tutorial NPC — Dr. Lewis / 莱维导师</div>
+    <div class="line-pair">
+      <div class="line-cn">这就是联结的力量！通过与伊莫建立联结，你能借助它们的元素之力战斗！</div>
+      <div class="line-en">This is the power of Twine! By forming a Twine with your Aniimo, you can channel their elemental power in battle!</div>
+    </div>
+    <div class="rationale">
+      <strong>Rationale 翻译说明</strong><br>
+      Dr. Lewis is a mentor figure — warm, authoritative, explanatory. The translation maintains an instructional register with controlled enthusiasm. Key terms "Twine" and "Aniimo" are integrated naturally into the sentence flow. "Channel" elevates the tone beyond the literal "borrow/use."<br>
+      <span style="color:var(--cn-text)">莱维导师为引导型角色——温和、权威、富有说明性。译文保持教学语域和适度的热情。关键术语自然融入句式流畅度中。"Channel"提升了语调，超越了直译的"借助/使用"。</span>
+    </div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="char-name">Playful / Cutesy Character 活泼/可爱角色</div>
+    <div class="line-pair">
+      <div class="line-cn">嘿嘿~伊莫们今天也很有精神呢~</div>
+      <div class="line-en">Hehe~ The Aniimo are full of energy today too~</div>
+    </div>
+    <div class="rationale">
+      <strong>Rationale 翻译说明</strong><br>
+      Tildes (~) are retained as a deliberate stylistic choice for characters with a playful, childlike register. This is a project-specific convention — tildes signal a character's personality type in the CN source, and removing them would flatten the characterization.<br>
+      <span style="color:var(--cn-text)">保留波浪号(~)是针对活泼、童真语域角色的刻意风格选择。这是项目特定惯例——波浪号在中文原文中标示角色性格类型，删除会使角色刻画趋于平淡。</span>
+    </div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="char-name">System / UI String 系统/界面文本</div>
+    <div class="line-pair">
+      <div class="line-cn">确定消耗星愿币切换伊莫的闪耀光彩吗？</div>
+      <div class="line-en">Are you sure you want to spend Starwish Coins to switch this Aniimo's Sparkling variant?</div>
+    </div>
+    <div class="rationale">
+      <strong>Rationale 翻译说明</strong><br>
+      UI confirmation strings require absolute clarity — no ambiguity about the action or cost. "Spend" is more natural than "consume" for a currency context. Every game term (Starwish Coin, Aniimo, Sparkling) rendered exactly per the locked termbase with no paraphrase.<br>
+      <span style="color:var(--cn-text)">UI确认文本要求绝对清晰——操作和代价不得有歧义。"Spend"在货币语境中比"consume"更自然。所有游戏术语严格按照锁定术语库翻译，不做改写。</span>
+    </div>
+  </div>
+</div>
+
+<!-- 3. PV / Promotional Copy -->
+<div class="section-heading">
+  <h2>3. PV / Promotional Copy</h2>
+  <div class="section-cn">PV文案</div>
+  <div class="section-rule"></div>
+</div>
+
+<div class="content">
+  <div class="dialogue-block">
+    <div class="char-name">Perfume Item Description 香水物品描述</div>
+    <div class="line-pair">
+      <div class="line-cn">萦思之语——每一缕香气，都是未曾说出口的思念。</div>
+      <div class="line-en">Whisper of Longing — every wisp of fragrance is a longing left unspoken.</div>
+    </div>
+    <div class="rationale">
+      <strong>Naming rationale 命名依据</strong><br>
+      The perfume name 萦思之语 (lit. "words of lingering thoughts") was rendered as "Whisper of Longing" — "whisper" captures the intimacy and delicacy of fragrance, while "longing" distills 萦思 into a single evocative English word. The alliterative echo of "longing...left...unspoken" gives the line lyrical quality suited to luxury item marketing. Fragrance naming in EN markets favors abstract emotional states (cf. Chanel's "Chance," Dior's "Joy").<br>
+      <span style="color:var(--cn-text)">香水名"萦思之语"译为"Whisper of Longing"——"whisper"捕捉了香气的亲密与细腻，"longing"将"萦思"凝练为一个富有感染力的英文词。"longing...left...unspoken"的头韵呼应赋予文案适合奢侈品营销的诗意品质。英文市场的香水命名倾向于抽象情感意象。</span>
+    </div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="char-name">Event Banner Copy 活动横幅文案</div>
+    <div class="line-pair">
+      <div class="line-cn">金秋良夜，盈月相邀，满载一季丰收的喜悦，与你共赴这场月华下的欢愉集会！</div>
+      <div class="line-en">On this golden autumn night, the full moon invites you — bringing a season's worth of harvest joy — to a festive gathering under the moonlight!</div>
+    </div>
+    <div class="rationale">
+      <strong>Rationale 翻译说明</strong><br>
+      Promotional copy demands rhythm and imagery. The CN piles up four-character phrases (金秋良夜, 盈月相邀); the EN restructures into a single flowing sentence that preserves the harvest-moon imagery while reading naturally. "A season's worth" is an idiomatic rendering of 满载一季 that avoids the stilted "fully loaded with a season of."<br>
+      <span style="color:var(--cn-text)">宣传文案讲究节奏和意象。中文叠用四字短语；英文重组为一个流畅的长句，保留丰收月色的意象同时确保自然阅读感。"A season's worth"是满载一季的地道译法，避免了生硬的直译。</span>
+    </div>
+  </div>
+</div>
+
+<!-- 4. Story & Plot -->
+<div class="section-heading">
+  <h2>4. Story & Plot</h2>
+  <div class="section-cn">剧情</div>
+  <div class="section-rule"></div>
+</div>
+
+<div class="content">
+  <h3>World-building terminology <span class="cn">世界观术语</span></h3>
+
+  <table class="term-table">
+    <thead>
+      <tr>
+        <th>CN</th>
+        <th>EN</th>
+        <th>Naming Rationale & Cultural Context<br><span style="font-weight:400;text-transform:none;letter-spacing:0">命名依据与文化语境</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="cn-source">神灵</td>
+        <td class="en-term">Aeon</td>
+        <td class="rationale">The game's divine beings. "Aeon" (from Greek αἰών, "age/epoch") conveys timelessness and cosmic scale without defaulting to "God/Deity," which would carry unwanted real-world religious connotations. Familiar to JRPG/fantasy audiences while remaining distinct within Aniimo's mythology.<br><span style="color:var(--cn-text);font-size:0.85rem">游戏中的神圣存在。"Aeon"（源自希腊语αἰών，意为"时代/纪元"）传达永恒与宇宙尺度，避免使用带有现实宗教色彩的"God/Deity"。JRPG/奇幻玩家群体熟悉该词，同时在Aniimo的神话体系中保持独特性。</span></td>
+      </tr>
+      <tr>
+        <td class="cn-source">始祖神</td>
+        <td class="en-term">Prime Aeon</td>
+        <td class="rationale">The supreme deity. "Prime" (first, original) + "Aeon" creates a clear hierarchy within the divine naming system. Avoids "Supreme God" or "Ancestral God" — too literal, too generic.<br><span style="color:var(--cn-text);font-size:0.85rem">至高神灵。"Prime"（首位、原初）+"Aeon"在神灵命名体系中构建清晰层级。避免过于直译和通用的"Supreme God"或"Ancestral God"。</span></td>
+      </tr>
+      <tr>
+        <td class="cn-source">神使 / 使徒</td>
+        <td class="en-term">Guardian</td>
+        <td class="rationale">Divine emissaries. "Guardian" was chosen over "Apostle" (too Christian-coded) or "Herald" (too passive). Communicates protective purpose and active agency, fitting their in-game role as powerful defenders.<br><span style="color:var(--cn-text);font-size:0.85rem">神圣使者。选择"Guardian"而非"Apostle"（基督教色彩过浓）或"Herald"（过于被动）。传达守护意图和主动性，契合其游戏内强力守卫者的角色定位。</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Plot-relevant dialogue <span class="cn">剧情关键对话</span></h3>
+
+  <div class="dialogue-block">
+    <div class="char-name">World Lore Narration 世界观叙事</div>
+    <div class="line-pair">
+      <div class="line-cn">这片大地曾经是神灵的乐园……直到那场灾变改变了一切。</div>
+      <div class="line-en">This land was once the Aeons' paradise... until the Cataclysm changed everything.</div>
+    </div>
+    <div class="rationale">
+      <strong>Rationale 翻译说明</strong><br>
+      "The Cataclysm" (capitalized, with definite article) signals a specific, named event in the game's lore — a standard fantasy-fiction convention that immediately tells the player this is a pivotal backstory event. The ellipsis creates a dramatic pause matching the CN's tone.<br>
+      <span style="color:var(--cn-text)">"The Cataclysm"（大写，带定冠词）标示游戏世界观中的特定命名事件——这是奇幻小说的标准惯例，让玩家立刻意识到这是关键的背景事件。省略号营造与中文原文一致的戏剧性停顿。</span>
+    </div>
+  </div>
+</div>
+
+<!-- 5. Fictional Holidays -->
+<div class="section-heading">
+  <h2>5. Fictional Holidays & Events</h2>
+  <div class="section-cn">虚构节日</div>
+  <div class="section-rule"></div>
+</div>
+
+<div class="content">
+  <table class="term-table">
+    <thead>
+      <tr>
+        <th>CN</th>
+        <th>EN</th>
+        <th>Naming Rationale<br><span style="font-weight:400;text-transform:none;letter-spacing:0">命名依据</span></th>
+        <th>Usage Rules<br><span style="font-weight:400;text-transform:none;letter-spacing:0">使用规则</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="cn-source">抢蛋大作战</td>
+        <td class="en-term">Operation: Egg Heist</td>
+        <td class="rationale">A seasonal PvP event. The military-style "Operation:" prefix adds weight and humor — the juxtaposition of a serious tactical framing with the silliness of stealing eggs creates the playful tone the CN intends. "Heist" adds mischievous energy that "battle" or "competition" would lack.<br><span style="color:var(--cn-text);font-size:0.85rem">赛季PvP活动。军事风格的"Operation:"前缀增添了分量感和幽默——严肃战术框架与偷蛋趣味的反差碰撞，营造出中文原文所追求的诙谐基调。"Heist"增添了"battle"或"competition"所缺乏的调皮活力。</span></td>
+        <td class="usage">Always with the colon: "Operation: Egg Heist." Never abbreviated to just "Egg Heist" in official text.<br><span style="color:var(--cn-text);font-size:0.83rem">始终保留冒号。正式文本中不得缩写为"Egg Heist"。</span></td>
+      </tr>
+      <tr>
+        <td class="cn-source">挥爪</td>
+        <td class="en-term">Third Closed Beta</td>
+        <td class="rationale">A development milestone codename. 挥爪 (lit. "claw swipe") is the team's internal codename for CBT3. Rendered descriptively rather than literally — players seeing "Claw" would be confused, while "Third Closed Beta" communicates clearly.<br><span style="color:var(--cn-text);font-size:0.85rem">开发里程碑代号。"挥爪"（字面义"挥动爪子"）是团队对第三次封测的内部代号。采用描述性译法而非直译——玩家看到"Claw"会困惑，而"Third Closed Beta"表意清晰。</span></td>
+        <td class="usage">Used only in meta/development-facing text. Never appears in in-game narrative.<br><span style="color:var(--cn-text);font-size:0.83rem">仅用于元/开发面向的文本。不出现在游戏内叙事中。</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="dialogue-block">
+    <div class="char-name">Seasonal Event Copy 赛季活动文案</div>
+    <div class="line-pair">
+      <div class="line-cn">金秋良夜，盈月相邀……举办或参与集会都能获得丰收小礼，不要错过哦！</div>
+      <div class="line-en">On this golden autumn night, the full moon invites you... Host or participate in a gathering to obtain a Harvest Gift. Don't miss out!</div>
+    </div>
+    <div class="rationale">
+      <strong>Cultural note 文化说明</strong><br>
+      This event draws on Mid-Autumn Festival imagery (full moon, harvest, gathering) without naming the real-world holiday — a common localization strategy that preserves cultural flavor while keeping the game's world self-contained. The EN preserves the moon/harvest imagery without needing to explain the cultural reference, as these are cross-culturally resonant symbols.<br>
+      <span style="color:var(--cn-text)">该活动借用了中秋节意象（满月、丰收、团聚），但未点明现实节日——这是一种常见的本地化策略，保留文化韵味的同时维持游戏世界的自洽性。英文保留了月亮/丰收意象，无需解释文化背景，因为这些是跨文化共通的符号。</span>
+    </div>
+  </div>
+</div>
+
+<!-- 6. Organizations -->
+<div class="section-heading">
+  <h2>6. Organizations</h2>
+  <div class="section-cn">组织</div>
+  <div class="section-rule"></div>
+</div>
+
+<div class="content">
+  <table class="term-table">
+    <thead>
+      <tr>
+        <th>CN</th>
+        <th>EN</th>
+        <th>Naming Rationale<br><span style="font-weight:400;text-transform:none;letter-spacing:0">命名依据</span></th>
+        <th>Usage Rules<br><span style="font-weight:400;text-transform:none;letter-spacing:0">使用规则</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="cn-source">极星学院</td>
+        <td class="en-term">Polaris Institute</td>
+        <td class="rationale">The main educational/training hub. "Polaris" (the North Star) replaces the literal 极星 ("pole star") with its Western astronomical name. "Institute" over "Academy" — slightly more mature, suggesting a serious research institution.<br><span style="color:var(--cn-text);font-size:0.85rem">主要教育/训练中心。"Polaris"（北极星）用西方天文学名称替代直译"极星"。选用"Institute"而非"Academy"——更成熟，暗示严肃的研究机构。</span></td>
+        <td class="usage">Always "Polaris Institute" on first mention. Can be shortened to "the Institute" or "Polaris" in casual NPC dialogue.<br><span style="color:var(--cn-text);font-size:0.83rem">首次提及时始终使用全称。在NPC日常对话中可简称"the Institute"或"Polaris"。</span></td>
+      </tr>
+      <tr>
+        <td class="cn-source">家立方公司</td>
+        <td class="en-term">GoGoHomes</td>
+        <td class="rationale">An in-game home-furnishing company. The playful doubled "GoGo" mirrors the casual, commercial energy of 家立方. The camelCase branding feels like a real startup name — immersive worldbuilding through typography.<br><span style="color:var(--cn-text);font-size:0.85rem">游戏内家居装饰公司。活泼的"GoGo"重叠呼应"家立方"的轻松商业气息。驼峰式品牌命名模拟真实创业公司风格——通过排版实现沉浸式世界观构建。</span></td>
+        <td class="usage">Always camelCase: "GoGoHomes," never "Gogo Homes" or "Go Go Homes."<br><span style="color:var(--cn-text);font-size:0.83rem">始终使用驼峰式："GoGoHomes"，不可写作"Gogo Homes"或"Go Go Homes"。</span></td>
+      </tr>
+      <tr>
+        <td class="cn-source">星之都拳簧俱乐部</td>
+        <td class="en-term">Astra Coilstrike Club</td>
+        <td class="rationale">A fighting gym in the capital. "Coilstrike" is a compound coinage: "coil" (the spring mechanism in the combat system) + "strike" (the punch). Avoids the flat literal "Punch Spring Club" and sounds like a real martial-arts gym brand.<br><span style="color:var(--cn-text);font-size:0.85rem">首都的格斗道馆。"Coilstrike"为合成新词："coil"（战斗系统中的弹簧机制）+"strike"（出拳）。避免平淡的直译"拳簧俱乐部"，听起来像真实的武术馆品牌。</span></td>
+        <td class="usage">Full name on first mention; "the Club" or "Coilstrike" thereafter.<br><span style="color:var(--cn-text);font-size:0.83rem">首次提及使用全称；之后可简称"the Club"或"Coilstrike"。</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 7. Place Names -->
+<div class="section-heading">
+  <h2>7. Place Names</h2>
+  <div class="section-cn">地名</div>
+  <div class="section-rule"></div>
+</div>
+
+<div class="content">
+  <table class="term-table">
+    <thead>
+      <tr>
+        <th>CN</th>
+        <th>EN</th>
+        <th>Naming Rationale & Cultural Context<br><span style="font-weight:400;text-transform:none;letter-spacing:0">命名依据与文化语境</span></th>
+        <th>Usage Rules<br><span style="font-weight:400;text-transform:none;letter-spacing:0">使用规则</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="cn-source">星之都</td>
+        <td class="en-term">Astra</td>
+        <td class="rationale">The capital city. From Latin "astra" (stars), matching 星 (star). A single-word proper noun gives the city gravitas — like Rome, Athens, London. The Latin root signals a cosmopolitan, advanced civilization.<br><span style="color:var(--cn-text);font-size:0.85rem">首都。源自拉丁语"astra"（星），对应中文"星"。单词专有名词赋予城市庄重感——如罗马、雅典、伦敦。拉丁词根暗示国际化的先进文明。</span></td>
+        <td class="usage">Always "Astra," never "Star City."<br><span style="color:var(--cn-text);font-size:0.83rem">始终使用"Astra"，不可译为"Star City"。</span></td>
+      </tr>
+      <tr>
+        <td class="cn-source">艾德尔</td>
+        <td class="en-term">Idyll</td>
+        <td class="rationale">The game world's name. "Idyll" (a peaceful, idealized scene) captures the pastoral-fantasy aesthetic while being a real English word with layers of meaning. The irony of naming a dangerous world "Idyll" adds narrative depth.<br><span style="color:var(--cn-text);font-size:0.85rem">游戏世界名。"Idyll"（宁静田园的理想画面）捕捉了田园奇幻的美学风格，同时作为真实英文词汇承载多层含义。以"Idyll"命名一个充满危险的世界，其反讽增添了叙事深度。</span></td>
+        <td class="usage">"Idyll" for the world; "Idyllian" for its people; "Ancient Idyllian" for the historical civilization.<br><span style="color:var(--cn-text);font-size:0.83rem">世界用"Idyll"；居民用"Idyllian"；历史文明用"Ancient Idyllian"。</span></td>
+      </tr>
+      <tr>
+        <td class="cn-source">风吻平原</td>
+        <td class="en-term">Breezy Plains</td>
+        <td class="rationale">An early-game area. Domesticates the poetic CN (风吻 = "wind-kissed") into something immediately readable. "Breezy" retains the wind association while feeling approachable — appropriate for a starter zone.<br><span style="color:var(--cn-text);font-size:0.85rem">前期区域。将诗意的中文（风吻="风之亲吻"）归化为一目了然的表达。"Breezy"保留了风的联想同时感觉亲切——适合新手区域。</span></td>
+        <td class="usage">Standard proper noun capitalization.<br><span style="color:var(--cn-text);font-size:0.83rem">标准专有名词大写。</span></td>
+      </tr>
+      <tr>
+        <td class="cn-source">潮音群岛</td>
+        <td class="en-term">Whisperwake Isles</td>
+        <td class="rationale">A coastal zone. "Whisperwake" is a compound coinage: "whisper" (capturing 潮音, the sound of tides) + "wake" (the trail left by waves, and also "awakening"). Creates a distinctive, memorable fantasy place name.<br><span style="color:var(--cn-text);font-size:0.85rem">沿海区域。"Whisperwake"为合成新词："whisper"（呼应"潮音"，海潮之声）+"wake"（波浪留下的尾迹，兼有"觉醒"之意）。打造独特、令人印象深刻的奇幻地名。</span></td>
+        <td class="usage">Never "Whisperwake Islands" — "Isles" is part of the established name.<br><span style="color:var(--cn-text);font-size:0.83rem">不可写作"Whisperwake Islands"——"Isles"是既定名称的一部分。</span></td>
+      </tr>
+      <tr>
+        <td class="cn-source">鲸落浅滩</td>
+        <td class="en-term">Echoback Landing</td>
+        <td class="rationale">A beach area. CN 鲸落 refers to "whale fall" (a marine biology term). Rather than "Whale Fall Shallows," "Echoback" reimagines the concept — the echo of something vast returning to the earth — while "Landing" suggests a navigable shore.<br><span style="color:var(--cn-text);font-size:0.85rem">海滩区域。中文"鲸落"指鲸鱼尸体沉入海底的海洋生物学术语。"Echoback"重新诠释了这一概念——某种庞大之物回归大地的回响——"Landing"则暗示可通航的海岸。</span></td>
+        <td class="usage"><span style="color:var(--cn-text);font-size:0.83rem">标准专有名词大写。</span></td>
+      </tr>
+      <tr>
+        <td class="cn-source">闪电之森</td>
+        <td class="en-term">Blitzwood</td>
+        <td class="rationale">A storm-themed forest. "Blitz" (from German, meaning lightning) + "wood" creates a punchy compound. One word, easy to remember, easy to type in chat. The Germanic root gives it a different flavor from the Latin-derived city names, suggesting a wilder, more primal area.<br><span style="color:var(--cn-text);font-size:0.85rem">风暴主题森林。"Blitz"（源自德语，意为闪电）+"wood"组成有力的复合词。单词形式，易记易输入。日耳曼词根赋予其不同于拉丁语系城市名的风味，暗示更野性、更原始的区域。</span></td>
+        <td class="usage">One word, always capitalized.<br><span style="color:var(--cn-text);font-size:0.83rem">一个词，始终大写。</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 8. Creature Names -->
+<div class="section-heading">
+  <h2>8. Aniimo (Creature) Names</h2>
+  <div class="section-cn">伊莫命名</div>
+  <div class="section-rule"></div>
+</div>
+
+<div class="content">
+  <table class="term-table">
+    <thead>
+      <tr>
+        <th>CN</th>
+        <th>EN</th>
+        <th>Naming Rationale & Cultural Associations<br><span style="font-weight:400;text-transform:none;letter-spacing:0">命名依据与文化联想</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="cn-source">粉团蜂</td>
+        <td class="en-term">Puffby</td>
+        <td class="rationale">粉团 (powder/puff ball) + 蜂 (bee) → "Puff" + "-by" (a diminutive suffix echoing "bee"). Cute, round-sounding, immediately communicates "fluffy bee creature." The "-by" suffix establishes a naming pattern for the bee family.<br><span style="color:var(--cn-text);font-size:0.85rem">粉团（粉扑球）+蜂 → "Puff"+"-by"（模拟"bee"的后缀变体）。发音圆润可爱，立即传达"毛茸茸的蜜蜂生物"。"-by"后缀为蜜蜂家族建立命名规律。</span></td>
+      </tr>
+      <tr>
+        <td class="cn-source">蜜冠蜂</td>
+        <td class="en-term">Royalby</td>
+        <td class="rationale">蜜冠 (honey crown) → "Royal" (crown association) + "-by" (bee-family suffix). The shared suffix creates a visible evolution line — players can intuit that Puffby evolves into Royalby.<br><span style="color:var(--cn-text);font-size:0.85rem">蜜冠（蜂蜜王冠）→ "Royal"（王冠联想）+"-by"（蜜蜂家族后缀）。共同后缀构建可辨识的进化链——玩家可以直觉地理解Puffby进化为Royalby。</span></td>
+      </tr>
+      <tr>
+        <td class="cn-source">霜锋狼</td>
+        <td class="en-term">Glynsera</td>
+        <td class="rationale">A coined fantasy name. "Glyn" (Welsh: valley/glen, evoking cold mountain terrain) + "sera" (suggesting a sleek, fierce creature). The wolf family uses distinct coined names where each evolution sounds progressively more powerful: Emberpup → Flameruff → Scorchhowl (fire); Bonesky → Fenrier → Glynsera (ice).<br><span style="color:var(--cn-text);font-size:0.85rem">虚构的奇幻名称。"Glyn"（威尔士语：山谷，唤起寒冷山地地形）+"sera"（暗示流线型凶猛生物）。狼系使用独特造词，每个进化阶段听起来逐步增强力量感。</span></td>
+      </tr>
+      <tr>
+        <td class="cn-source">小炭犬</td>
+        <td class="en-term">Emberpup</td>
+        <td class="rationale">The baby fire-wolf. "Ember" (a small, glowing coal — not yet a full flame) + "pup" (baby canine). The name tells you everything: it's small, it's fiery, it's a dog. Transparent compound naming is used for first-stage creatures to aid new-player comprehension.<br><span style="color:var(--cn-text);font-size:0.85rem">幼年火狼。"Ember"（微小的灼热余烬——尚未成为完整火焰）+"pup"（幼犬）。名称传达一切信息：体型小、有火属性、是犬类。透明的复合命名用于初阶生物，帮助新玩家理解。</span></td>
+      </tr>
+      <tr>
+        <td class="cn-source">岩球郎</td>
+        <td class="en-term">Bouldus</td>
+        <td class="rationale">岩球 (rock ball) + 郎 (fellow/guy) → "Boulder" + Latin masculine suffix "-us." The pseudo-Latin ending gives the rock creature a weighty, ancient feel. The "-us" suffix ties into the dung-beetle family: Baleetle (屎壳郎), Waleetle (摩托郎).<br><span style="color:var(--cn-text);font-size:0.85rem">岩球+郎 → "Boulder"+拉丁语阳性后缀"-us"。伪拉丁语词尾赋予岩石生物厚重、古老的质感。"-us"后缀与甲虫家族形成关联。</span></td>
+      </tr>
+      <tr>
+        <td class="cn-source">迷瞳翼</td>
+        <td class="en-term">Mis-Tinted Wing</td>
+        <td class="rationale">A moth-like creature. "Mis-Tinted" creates a visual pun — suggesting both "mistily colored" and "incorrectly colored" (wings that shimmer with deceptive, shifting hues). This wordplay rewards English-speaking players with a layer the CN name approaches differently.<br><span style="color:var(--cn-text);font-size:0.85rem">飞蛾类生物。"Mis-Tinted"构成视觉双关——既暗示"如雾般着色"又暗示"着色错误"（翅膀闪烁着迷惑性的变幻色彩）。这种文字游戏为英语玩家提供了中文原名以不同方式表达的意义层次。</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Summary -->
+<div class="section-heading">
+  <h2>Summary: Localization Principles</h2>
+  <div class="section-cn">总结：本地化原则</div>
+  <div class="section-rule"></div>
+</div>
+
+<div class="content">
+  <ul class="summary-list">
+    <li>
+      <strong>Consistency over creativity</strong> — Once a term is locked, it is used identically across all contexts: UI, dialogue, tooltips, promotional material. No synonyms, no paraphrases.
+      <span class="cn">一致性优先于创造性——术语一旦锁定，在所有语境中统一使用：UI、对话、提示、宣传材料。不使用同义词，不做改写。</span>
+    </li>
+    <li>
+      <strong>Register matching</strong> — Tutorial NPCs speak clearly; playful characters keep their quirks; UI text prioritizes zero-ambiguity clarity; PV copy aims for rhythm and imagery.
+      <span class="cn">语域匹配——教程NPC表达清晰；活泼角色保留其特色；UI文本优先确保零歧义的清晰度；PV文案追求节奏和意象。</span>
+    </li>
+    <li>
+      <strong>Cultural transposition over literal translation</strong> — Place names, creature names and event names are reimagined to feel native in English while preserving the CN source's intent and associations.
+      <span class="cn">文化移植优先于直译——地名、生物名和活动名经过重新构思，在英文中呈现出本土感的同时保留中文原文的意图和联想。</span>
+    </li>
+    <li>
+      <strong>Systematic naming families</strong> — Related creatures share suffixes or patterns so players can intuit relationships: -by for bees, -eetle for beetles, compound progression for wolves.
+      <span class="cn">系统化命名族群——关联生物共享后缀或规律，使玩家能直觉地理解关系：蜜蜂用-by、甲虫用-eetle、狼系用复合词递进。</span>
+    </li>
+    <li>
+      <strong>Avoiding competitor-franchise conventions</strong> — No "-type" element suffixes, no "balls" for capture devices, no "shiny" for rare variants. The game maintains its own identity.
+      <span class="cn">规避竞品惯例——不使用"-type"元素后缀、不用"ball"指代捕获装置、不用"shiny"指代稀有变体。游戏保持自身独特性。</span>
+    </li>
+    <li>
+      <strong>Brand-aware coinage</strong> — Key terms (Aniimo, Aniipod, Twine) are original coinages that are searchable, trademarkable and distinctive — essential for a game building its own IP.
+      <span class="cn">品牌意识造词——核心术语（Aniimo、Aniipod、Twine）为原创新词，具有可搜索性、可注册商标性和辨识度——对构建自有IP的游戏至关重要。</span>
+    </li>
+  </ul>
+</div>
+
+<footer>
+  <p>William Clegg — Chinese → English Translator & Localisation Specialist</p>
+  <p><a href="https://linkedin.com/in/william-clegg/">LinkedIn</a></p>
+</footer>
+
+</body>
+</html>
